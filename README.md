@@ -1,6 +1,6 @@
 # Python Script for scraping group members
 
-### All you need to do is download(clone) file with the .exe extension and run it.
+### All you need to do is download(clone) file with the .exe extension in a dist folder and run it.
 
 ###### After running a program you shouud be able to register your session to let the script save your input data
 
