@@ -1,7 +1,7 @@
 # Python Script for scraping group members
 
-### All you need to do is download(clone) file with the .exe extension in a dist folder and run it.
-
+### Go to [my.telegram.org](https://my.telegram.org/) and register your app
+### After you will get api_id and api_hash which you should enter when running script
 ###### After running a program you shouud be able to register your session to let the script save your input data
 
 ###### Running instructions:
