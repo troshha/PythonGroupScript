@@ -1,7 +1,11 @@
 from telethon.sync import TelegramClient
 from telethon.tl.functions.messages import GetDialogsRequest
-from telethon.tl.types import InputPeerEmpty
+from telethon.tl.types import InputPeerEmpty, InputPeerChannel, InputPeerEmpty
+from telethon.errors.rpcerrorlist import PeerFloodError, UserPrivacyRestrictedError
+from telethon.tl.functions.channels import InviteToChannelRequest
 import csv
+import traceback
+import time
 
 
 api_id = 1038476
@@ -55,12 +59,43 @@ def scrapeGroups():
     for participant in all_participants:
         if participant.username is not None:
             usernames.append(participant.username)
-
         else:
             usernames.append('User type is none')
     client.send_message(
         'me', f"List of all users From {target_group.title}.\n Total user count {len(usernames)}")
     client.send_message('me', "\n".join(usernames))
+    # Adding to group
+    print('Choose a group to add members:')
+    i = 0
+    for group in groups:
+        print(str(i) + '- ' + group.title)
+        i += 1
+
+    g_index = input("Enter a Number: ")
+    target_group = groups[int(g_index)]
+
+    target_group_entity = InputPeerChannel(
+        target_group.id, target_group.access_hash)
+
+    for user in usernames:
+        try:
+            print("Adding {}".format(user))
+            if user == "User type is none":
+                continue
+            user_to_add = client.get_input_entity(user)
+            client(InviteToChannelRequest(
+                target_group_entity, [user_to_add]))
+            print("Waiting 60 Seconds...")
+            time.sleep(60)
+        except PeerFloodError:
+            print(
+                "Getting Flood Error from telegram. Script is stopping now. Please try again after some time.")
+        except UserPrivacyRestrictedError:
+            print("The user's privacy settings do not allow you to do this. Skipping.")
+        except:
+            traceback.print_exc()
+            print("Unexpected Error")
+            continue
 
 
 def main():
